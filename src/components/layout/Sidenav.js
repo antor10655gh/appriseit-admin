@@ -53,7 +53,15 @@ function Sidenav({ color }) {
   return (
     <>
       <div className="brand">
-        <h1 style={{ fontSize: "20px", fontWeight: "bold" }}>
+        <h1
+          style={{
+            fontSize: "22px",
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           Apprise <span style={{ color: "#17C3B2" }}>Care</span>
         </h1>
       </div>

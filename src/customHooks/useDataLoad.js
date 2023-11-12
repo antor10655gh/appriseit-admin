@@ -24,7 +24,7 @@ const useDataLoad = (url, options = {}) => {
     };
 
     fetchData();
-  }, [url, options]); // Ensure that dependencies are listed here
+  }, [url, options]);
 
   return { data, loading, error };
 };
