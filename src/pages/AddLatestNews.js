@@ -1,27 +1,12 @@
 import React, { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
-import {
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Upload,
-  Button,
-  message,
-  Row,
-  Col,
-  DatePicker,
-} from "antd";
+import { Form, Input, Upload, Button, message, Row, Col } from "antd";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import moment from "moment";
 const { TextArea } = Input;
 
 const AddLatestNews = () => {
   const navigate = useHistory();
-  const onChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-
   const time = moment().format("LL");
 
   const [fileList, setFileList] = useState([]);

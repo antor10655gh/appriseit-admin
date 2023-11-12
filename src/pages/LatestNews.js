@@ -1,61 +1,40 @@
+import { Space, Table, Button, Modal, Form, Input, Upload } from "antd";
 import {
-  Space,
-  Table,
-  Button,
-  Modal,
-  Form,
-  Input,
-  InputNumber,
-  Select,
-  Upload,
-} from "antd";
-import {
-  EyeOutlined,
   PlusOutlined,
   EditOutlined,
   DeleteOutlined,
   ExclamationCircleOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
-const onChange = (value) => {
-  console.log(`selected ${value}`);
-};
-const onSearch = (value) => {
-  console.log("search:", value);
-};
+import useDataLoad from "../customHooks/useDataLoad";
 
 const { confirm } = Modal;
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 
 // add new make & modal is here
 
 const LatestNews = () => {
-  // make & model list get from here
-  const [count, setCount] = useState(false);
-  const [latestNewses, setLatestNewses] = useState([]);
-  const newLatestNewses = [];
-  [...latestNewses].reverse().map((news) => newLatestNewses.push(news));
-  const getLatestNewses = async () => {
-    const response = await fetch("http://localhost:5000/api/v1/latest_news", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${JSON.parse(localStorage.getItem("token"))}`,
-      },
-    });
-    const data = await response.json();
-    setLatestNewses(data);
-    setCount(true);
-  };
+  const [fileList, setFileList] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingLatestNewses, setEditingLatestNewses] = useState(null);
 
-  useEffect(() => {
-    getLatestNewses();
-  }, [count]);
+  const apiUrl = "http://localhost:5000/api/v1/latest_news";
+  const { data, loading, error } = useDataLoad(apiUrl, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
 
-  let lastKey = parseInt(latestNewses[latestNewses.length - 1]?.key) + 1;
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error.message}</p>;
+  }
 
   // delete model is open
   const showConfirm = (id) => {
@@ -75,33 +54,6 @@ const LatestNews = () => {
     });
   };
 
-  const [open, setOpen] = useState(false);
-  const onCreate = (values) => {
-    console.log(values.file.file.name);
-    let newValues = { ...values, key: lastKey ? lastKey : 1 };
-    fetch("http://localhost:5000/api/v1/latest_news/update", {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(newValues),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        toast.success("Successfully Product Create!", {
-          autoClose: 1000,
-        });
-        console.log(json);
-        getLatestNewses();
-        setOpen(false);
-      });
-  };
-
-  // edit make & model
-  const [isEditing, setIsEditing] = useState(false);
-  const [editingLatestNewses, setEditingLatestNewses] = useState(null);
-
   const editMakeModal = (record) => {
     setIsEditing(true);
     setEditingLatestNewses({ ...record });
@@ -109,9 +61,6 @@ const LatestNews = () => {
   };
 
   // upload file
-  const [fileList, setFileList] = useState([]);
-  const [uploading, setUploading] = useState(false);
-
   const props = {
     onRemove: (file) => {
       const index = fileList.indexOf(file);
@@ -136,7 +85,7 @@ const LatestNews = () => {
           marginBottom: "30px",
         }}
       >
-        <h1>Create Special Credits</h1>
+        <h1>All Latest News</h1>
         <div>
           <div style={{ marginRight: "10px" }}>
             <Button
@@ -154,14 +103,14 @@ const LatestNews = () => {
         </div>
       </div>
       <div style={{ marginTop: "30px", overflowX: "auto" }}>
-        <Table dataSource={newLatestNewses}>
+        <Table dataSource={data}>
           <Column
             title="Image"
             dataIndex="newsBanner"
             key="newsBanner"
             render={(_, record) => (
               <img
-                src={`http://localhost:5000/api/v1/multerFile${record.newsBanner}`}
+                src={`http://localhost:5000/multerFile${record.newsBanner}`}
                 alt="newsBanner"
                 style={{ width: "50px", height: "50px" }}
               />
@@ -224,7 +173,6 @@ const LatestNews = () => {
                   autoClose: 1000,
                 });
                 setIsEditing(false);
-                getLatestNewses();
               });
           }}
         >
