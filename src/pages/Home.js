@@ -6,11 +6,15 @@ import useDataLoad from "../customHooks/useDataLoad";
 function Home() {
   const { Title } = Typography;
   const apiUrl = "http://localhost:5000/api/v1/latest_news";
-  const { data } = useDataLoad(apiUrl, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+  const { data } = useDataLoad(
+    apiUrl,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     },
-  });
+    [apiUrl]
+  );
 
   const profile = [
     <svg

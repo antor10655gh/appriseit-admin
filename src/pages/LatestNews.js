@@ -22,11 +22,15 @@ const LatestNews = () => {
   const [editingLatestNewses, setEditingLatestNewses] = useState(null);
 
   const apiUrl = "http://localhost:5000/api/v1/latest_news";
-  const { data, loading, error } = useDataLoad(apiUrl, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+  const { data, loading, error } = useDataLoad(
+    apiUrl,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     },
-  });
+    [apiUrl]
+  );
 
   if (loading) {
     return <p>Loading...</p>;
@@ -88,12 +92,7 @@ const LatestNews = () => {
         <h1>All Latest News</h1>
         <div>
           <div style={{ marginRight: "10px" }}>
-            <Button
-              type="primary"
-              // onClick={() => {
-              //   setOpen(true);
-              // }}
-            >
+            <Button type="primary">
               <Link to="/add_latest_news">
                 <PlusOutlined style={{ marginRight: "5px" }} />
                 Add LatestNewses
@@ -128,11 +127,6 @@ const LatestNews = () => {
                 <Button type="primary" onClick={() => editMakeModal(record)}>
                   <EditOutlined />
                 </Button>
-                {/* <Link to={`/edit_latestNewses/${record._id}`}>
-                  <Button type="primary">
-                    <EditOutlined />
-                  </Button>
-                </Link> */}
                 <Button type="danger" onClick={() => showConfirm(record._id)}>
                   <DeleteOutlined />
                 </Button>
