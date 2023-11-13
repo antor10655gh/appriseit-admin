@@ -95,7 +95,7 @@ const LatestNews = () => {
             key="newsBanner"
             render={(_, record) => (
               <img
-                src={`http://localhost:5000/multerFile${record.newsBanner}`}
+                src={`http://localhost:5000/multerfile${record.newsBanner}`}
                 alt="newsBanner"
                 style={{ width: "50px", height: "50px" }}
               />
