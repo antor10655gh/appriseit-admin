@@ -43,7 +43,21 @@ const LatestNews = () => {
       okText: "Delete",
       okType: "danger",
 
-      onOk() {},
+      onOk() {
+        fetch(`http://localhost:5000/api/v1/latest_news/delete/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            if (data.status === "success") {
+              window.location.reload();
+            }
+          });
+      },
 
       onCancel() {
         console.log("Cancel");
